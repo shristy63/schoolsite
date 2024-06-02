@@ -1,0 +1,60 @@
+name: Test Before merging
+
+on:
+  pull_request:
+    branches: [ "master" ]
+  
+jobs:
+  build:
+
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+
+    steps:
+       # use it to whenever workflow use repository code
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        # This is the version of the action for setting up Python, not the Python version.
+        uses: actions/setup-python@v5
+        with:
+          # Semantic version range syntax or exact version of a Python version
+          python-version: '3.10'
+          # Optional - x64 or x86 architecture, defaults to x64
+          architecture: 'x64' 
+      
+
+      ##installing build essentials for packages installation
+      - name: Install Build Essentials
+        if: runner.os == 'Linux'
+        run: |
+             sudo apt-get update
+             sudo apt-get install -y build-essential python3.10-dev libffi-dev
+      
+      ##caching pip for faster operation
+      - name: Cache pip
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      ##installing dependencies for use
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip setuptools wheel
+          pip install --prefer-binary -r requirements.txt --verbose
+
+      - name: Start Django Development Server
+        run: |
+          python manage.py runserver 0.0.0.0:8000 &
+
+      - name: Wait for Django Server to Start
+        run: |
+          sleep 10  # Wait for the server to start
+          curl http://localhost:8000/  # Perform a basic check

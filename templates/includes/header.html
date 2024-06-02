@@ -1,0 +1,44 @@
+
+<header id="header" class="header d-flex align-items-center sticky-top">
+    <div class="container-fluid container-xl position-relative d-flex align-items-center">
+
+      <a href="index.html" class="logo d-flex align-items-center me-auto">
+        <!-- Uncomment the line below if you also wish to use an image logo -->
+        <!-- <img src="assets/img/logo.png" alt=""> -->
+        <h1 class="sitename">Nepal HS</h1>
+      </a>
+      
+      <nav id="navmenu" class="navmenu">
+        <ul>
+          <li><a href="{% url 'home' %}" id="home-link">Home<br></a></li>
+          <li><a href="{% url 'about' %}" id="about-link">About</a></li>
+          <li><a href="{% url 'course' %}" id="courses-link">Courses</a></li>
+          <li><a href="#" id="teachers-link">Teachers</a></li>
+          <li><a href="#" id="contact-link">Contact</a></li>
+        </ul>
+        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+      </nav>
+      
+
+    </div>
+  </header>
+
+  <script>
+    // Function to set the active class based on current URL
+    function setActiveLink() {
+      const links = document.querySelectorAll('#navmenu ul li a');
+      const currentURL = window.location.href;
+  
+      links.forEach(link => {
+        if (link.href === currentURL) {
+          link.classList.add('active');
+        } else {
+          link.classList.remove('active');
+        }
+      });
+    }
+  
+    // Call the function when the DOM is fully loaded
+    document.addEventListener('DOMContentLoaded', setActiveLink);
+  </script>
+  

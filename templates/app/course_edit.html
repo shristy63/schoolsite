@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<main class="main">
+
+    <!-- Page Title -->
+    <div class="page-title" data-aos="fade">
+      <div class="heading">
+        <div class="container">
+          <div class="row d-flex justify-content-center text-center">
+            <div class="col-lg-8">
+              <h1>Courses</h1>
+              <p class="mb-0">Our mission is to inspire and educate students, fostering a love of learning and a commitment to personal excellence. We provide a supportive environment where each child can thrive and reach their full potential.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <nav class="breadcrumbs">
+        <div class="container">
+          <ol>
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li class="current">Courses</li>
+          </ol>
+        </div>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <!-- Courses Section -->
+    <section id="courses" class="courses section">
+
+      <div class="container">
+
+        <div class="row">
+            <div class="container mt-5">
+                <h2>Courses</h2>
+                <table class="table table-bordered" id="editableTable">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>Title</th>
+                            <th>Description</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for course in courses %}
+                        <tr>
+                            <td contenteditable="false">{{course.title}}</td>
+                            <td contenteditable="false">{{course.description|slice:"12"}}</td>
+                            <td>
+                                <a class="btn btn-primary" href="{% url 'course_edit' course.id %}">Edit</a>
+                                <a class="btn btn-danger" href="{% url 'course_delete' course.id %}">Delete</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <form action={% url 'course_edit' course_id %} method="POST">
+                    {% csrf_token %}
+                {{form.as_p}}
+                <button type="submit" class="btn btn-info">Update</button>
+
+                </form>
+            </div>
+        </div>
+
+      </div>
+
+    </section><!-- /Courses Section -->
+
+  </main>
+
+{% endblock content %}
